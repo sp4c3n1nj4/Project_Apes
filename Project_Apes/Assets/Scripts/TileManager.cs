@@ -34,7 +34,7 @@ public class TileManager : MonoBehaviour
     private Vector2Int clickedTile;
 
     public Dictionary<Vector2Int, GameObject> ActiveTowers = new();
-    public List<Vector2Int> EnemyPath;
+    public List<Vector2Int> EnemyPath = new() { Vector2Int.one };
 
     private void Update()
     {
@@ -69,6 +69,8 @@ public class TileManager : MonoBehaviour
         else
         {
             selectedTile = new Vector2Int(-1, -1);
+
+            if (selected != Selected.none) return;
             TileHighlight.transform.position = GetTile(selectedTile);
         }
     }
@@ -94,6 +96,7 @@ public class TileManager : MonoBehaviour
     private void EmptyTileInteract()
     {
         clickedTile = selectedTile;
+        print(clickedTile);
         selected = Selected.tile;
         TileUI.transform.position = GetTile(clickedTile);
         TileUI.SetActive(true);
@@ -149,7 +152,5 @@ public class TileManager : MonoBehaviour
         ActiveTowers.Add(clickedTile, tower);
 
         selected = Selected.none;
-    }
-
-    
+    }   
 }

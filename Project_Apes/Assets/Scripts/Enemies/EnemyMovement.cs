@@ -19,7 +19,7 @@ public class EnemyMovement : MonoBehaviour
     public void StartWave()
     {
         Path = manager.EnemyPath.ToArray();
-        //Path.Reverse();
+        Path.Reverse();
         percentage = 0;
     }
 
