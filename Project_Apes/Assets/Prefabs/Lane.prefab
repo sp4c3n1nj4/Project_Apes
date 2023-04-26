@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3359852772601763331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3359852772601763358}
+  - component: {fileID: 3359852772601763329}
+  - component: {fileID: 3359852772601763328}
+  m_Layer: 0
+  m_Name: Lane
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3359852772601763358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3359852772601763331}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3359852772601763329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3359852772601763331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58c718e2e56d264dad6070d73a08d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  pathfinding: {fileID: 0}
+  spawner: {fileID: 0}
+  enemyOffset: 0.3
+  speed: 1
+  hasPath: 0
+  startTile: {x: 0, y: 0}
+  endTile: {x: 0, y: 0}
+  moveEnemies: 0
+--- !u!114 &3359852772601763328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3359852772601763331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c192bd5aebfc234b80955a322265d7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  enemyPrefabs:
+  - {fileID: 915499381652169995, guid: accc5ecdcaf7894429bddeb3959241c6, type: 3}
+  - {fileID: 5943159231207750640, guid: 8649f4cec7ae3db48b2150991bf2c10c, type: 3}
+  - {fileID: 7474687582307881193, guid: fe200d564064b3540baf42cca0df5e6c, type: 3}
+  - {fileID: 4537094669745229078, guid: bc522c46a3d738d4a8763afa66e73585, type: 3}
+  enemyType: 0
+  enemyOffset: 0.3
+  enemyAmount: 0
+  speed: 1
+  enemies: []
+  waveComplete: 0

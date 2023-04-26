@@ -9,14 +9,17 @@ public class EnemyMovement : MonoBehaviour
     private TileManager manager;
     [SerializeField]
     private Pathfinding pathfinding;
+    [SerializeField]
+    private EnemySpawner spawner;
 
     private Vector2Int[] Path;
-    [SerializeField]
-    private GameObject[] Enemies;
-
-    [SerializeField]
-    private float speed = 1, enemyOffset;
+   
     private float percentage;
+
+    public float enemyOffset;
+    public float speed = 1;
+
+    public bool hasPath = false;
 
     public Vector2Int startTile;
     public Vector2Int endTile;
@@ -24,6 +27,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void Start()
     {
+        manager = GameObject.FindObjectOfType<TileManager>();
+        pathfinding = GameObject.FindObjectOfType<Pathfinding>();
+
+        spawner = gameObject.GetComponent<EnemySpawner>();
+
         DoPathfinding();
 
         manager.GridObstacleChange.AddListener(CheckPathfinding);
@@ -37,10 +45,12 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    public void StartWave()
+    public void StartWave(float _enemyOffset, float _speed)
     {
         percentage = 0;
         moveEnemies = true;
+        enemyOffset = _enemyOffset;
+        speed = _speed;
     }
 
     public void EndWave()
@@ -67,6 +77,7 @@ public class EnemyMovement : MonoBehaviour
         if (_path != null && _path.Length < Path.Length)
         {
             Path = _path;
+            hasPath = true;
         }
     }
 
@@ -76,10 +87,12 @@ public class EnemyMovement : MonoBehaviour
         if (_path != null)
         {
             Path = _path;
+            hasPath = true;
         }
         else
         {
             Path = new Vector2Int[0];
+            hasPath = false;
             PathfindingError();
         }
     }
@@ -91,6 +104,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void FollowPath()
     {
+        GameObject[] Enemies = spawner.enemies.ToArray();
         for (int i = 0; i < Enemies.Length; i++)
         {
             float newP = percentage - i * enemyOffset;

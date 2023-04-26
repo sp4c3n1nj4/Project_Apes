@@ -3,17 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum damageType
+public enum DamageType
 {
+    cut,
+    press,
+    shredd,
     fire,
-    electric
+    electric,
+    ice,
+    steam,
+    water,
+    magnet
 }
 
 public class Tower : MonoBehaviour
 {
     //stats
     public float attackDelay;
-    public damageType damageType;
+    public DamageType damageType;
     public float range = Mathf.Infinity;
     public float spawnOffset = 0.45f;
     //variables
