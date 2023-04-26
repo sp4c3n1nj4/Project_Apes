@@ -15,12 +15,14 @@ public class Tower : MonoBehaviour
     public float attackDelay;
     public damageType damageType;
     public float range = Mathf.Infinity;
+    public float spawnOffset = 0.45f;
     //variables
     public bool engaged;
 
     public void DestroyTower()
     {
-        throw new NotImplementedException();
+        //more stuff here later
+        Destroy(gameObject);
     }
 
     public void Update()

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TileManager : MonoBehaviour
 {
@@ -12,19 +13,97 @@ public class TileManager : MonoBehaviour
     private const float tileSize = 1f;
     private const float tileOffset = 0.5f;
 
-    public Vector3 GetTile(int x, int y)
+    public Vector2Int gridSize = new Vector2Int(20, 20);
+    public Node[,] grid;
+
+    public UnityEvent GridObstacleChange;
+
+    private void Awake()
     {
-        Vector3 pos = Vector3.zero;
-        pos.x += (tileSize * x) + tileOffset;
-        pos.z += (tileSize * y) + tileOffset;
-        return pos;
+        if (GridObstacleChange == null)
+            GridObstacleChange = new UnityEvent();
+
+        CreateGrid();  
     }
+    private void CreateGrid()
+    {
+        grid = new Node[gridSize.x, gridSize.y];
+
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                Vector2Int gridPoint = new Vector2Int(x, y);
+                grid[x, y] = new Node(true, gridPoint);
+            }
+        }
+    }
+
     public Vector3 GetTile(Vector2Int tile)
     {
-        Vector3 pos = Vector3.zero;
+        Vector3 worldBottomLeft = Vector3.zero - Vector3.right * gridSize.x/2 - Vector3.forward * gridSize.y/2;
+        Vector3 pos = worldBottomLeft;
         pos.x += (tileSize * tile.x) + tileOffset;
         pos.z += (tileSize * tile.y) + tileOffset;
         return pos;
+    }
+    public Vector3 GetTile(Node node)
+    {
+        Vector3 worldBottomLeft = Vector3.zero - Vector3.right * gridSize.x / 2 - Vector3.forward * gridSize.y / 2;
+        Vector3 pos = worldBottomLeft;
+        pos.x += (tileSize * node.gridPos.x) + tileOffset;
+        pos.z += (tileSize * node.gridPos.y) + tileOffset;
+        return pos;
+    }
+
+    public Vector2Int TileFromWorldPoint(Vector3 worldPos)
+    {
+        float X = worldPos.x + gridSize.x/2;
+        float Y = worldPos.z + gridSize.y/2;
+
+        int x = Mathf.FloorToInt(X);
+        int y = Mathf.FloorToInt(Y);
+
+        return grid[x,y].gridPos;
+    }
+    public Node NodeFromWorldPoint(Vector3 worldPos)
+    {
+        float X = worldPos.x + gridSize.x / 2;
+        float Y = worldPos.z + gridSize.y / 2;
+
+        int x = Mathf.FloorToInt(X);
+        int y = Mathf.FloorToInt(Y);
+
+        return grid[x, y];
+    }
+
+    public List<Node> GetNeighbours(Node node)
+    {
+        List<Node> neighbours = new List<Node>();
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (Mathf.Abs(x) == Mathf.Abs(y))
+                    continue;
+
+                int checkX = node.gridPos.x + x;
+                int checkY = node.gridPos.y + y;
+
+                if (checkX >= 0 && checkX < gridSize.x && checkY >= 0 && checkY < gridSize.y)
+                {
+                    neighbours.Add(grid[checkX,checkY]);
+                }
+            }
+        }
+
+        return neighbours;
+    }
+
+    public int maxSize()
+    {
+        return gridSize.x * gridSize.y;
     }
 
     private enum Selected { none, tile, tower }
@@ -34,7 +113,6 @@ public class TileManager : MonoBehaviour
     private Vector2Int clickedTile;
 
     public Dictionary<Vector2Int, GameObject> ActiveTowers = new();
-    public List<Vector2Int> EnemyPath = new() { Vector2Int.one };
 
     private void Update()
     {
@@ -58,7 +136,7 @@ public class TileManager : MonoBehaviour
     {
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, LayerMask.GetMask("Tiles")))
         {
-            Vector2Int hitPoint = new Vector2Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
+            Vector2Int hitPoint = TileFromWorldPoint(hit.point);
 
             if (selectedTile == hitPoint) return;
             selectedTile = hitPoint;
@@ -82,21 +160,23 @@ public class TileManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (EnemyPath.Contains(selectedTile))
-                return;
+            print(selectedTile.ToString() + "\n" + GetTile(selectedTile).ToString());
+
             if (ActiveTowers.Count > 0)
             {
                 if (ActiveTowers.ContainsKey(selectedTile))
                     TowerInteract();
+                else
+                    EmptyTileInteract();
             }
             else
-                EmptyTileInteract();
+                EmptyTileInteract();              
         }
     }
     private void EmptyTileInteract()
     {
+        print("empty tile interact");
         clickedTile = selectedTile;
-        print(clickedTile);
         selected = Selected.tile;
         TileUI.transform.position = GetTile(clickedTile);
         TileUI.SetActive(true);
@@ -137,6 +217,10 @@ public class TileManager : MonoBehaviour
     {
         ActiveTowers[clickedTile].GetComponent<Tower>().DestroyTower();
         ActiveTowers.Remove(clickedTile);
+        grid[clickedTile.x, clickedTile.y].walkable = true;
+
+        GridObstacleChange.Invoke();
+        DisableMenu();
     }
 
     private void TileMenu()
@@ -147,10 +231,14 @@ public class TileManager : MonoBehaviour
     public void SpawnTower(int i)
     {
         GameObject tower = Instantiate<GameObject>(Towers[i]);
-        tower.transform.position = GetTile(clickedTile);
+        tower.transform.position = GetTile(clickedTile) + Vector3.up * tower.GetComponent<Tower>().spawnOffset;
 
         ActiveTowers.Add(clickedTile, tower);
+        grid[clickedTile.x, clickedTile.y].walkable = false;
+
+        GridObstacleChange.Invoke();
 
         selected = Selected.none;
+        DisableMenu();
     }   
 }
