@@ -33,7 +33,7 @@ public class WaveManager : MonoBehaviour
         spawners = MakeSpawnerArray();
         movements = MakeMovementArray();
 
-        CreateLane(new Vector2Int(0,13), EnemyType.wood, 10);
+        CreateLane(new Vector2Int(6,10), EnemyType.wood, 10);
     }
 
     private void Update()

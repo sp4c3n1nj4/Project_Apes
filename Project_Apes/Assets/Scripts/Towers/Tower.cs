@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum DamageType
@@ -19,12 +20,15 @@ public enum DamageType
 public class Tower : MonoBehaviour
 {
     //stats
+    [DoNotSerialize]
     public float attackDelay;
+    [DoNotSerialize]
     public DamageType damageType;
     public float range = Mathf.Infinity;
     public float spawnOffset = 0.45f;
     //variables
     public bool engaged;
+    private float delay;
 
     public void DestroyTower()
     {
@@ -32,9 +36,46 @@ public class Tower : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public virtual void Attack()
+    {
+        throw new NotImplementedException();
+    }
+
     public void Update()
     {
         DetectEnemies();
+
+        delay += Time.deltaTime;
+        delay = Mathf.Clamp(delay,0, attackDelay);
+        if (engaged && delay >= attackDelay)
+        {
+            Attack();
+            delay= 0;
+        }
+    }
+
+    public Vector3 TileOffsetPosition(Vector2Int offset)
+    {
+        Vector3 pos = transform.position;
+
+        pos.x += offset.x;
+        pos.z += offset.y;
+
+        return pos;
+    }
+    public Vector3 TileOffsetPosition(float offsetX, float offsetY)
+    {
+        Vector3 pos = Vector3.zero;
+
+        pos.x += offsetX;
+        pos.z += offsetY;
+
+        pos = transform.rotation * pos;
+        pos += transform.position;
+
+        pos.y = 0.1f;
+
+        return pos;
     }
 
     private void DetectEnemies()

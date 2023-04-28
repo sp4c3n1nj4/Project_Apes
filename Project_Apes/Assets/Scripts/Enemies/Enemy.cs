@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(DamageType damageType)
     {
+        print("got hit with: " + damageType.ToString());
         typesTaken.Add(damageType);
         CheckTypes();
     }

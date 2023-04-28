@@ -13,8 +13,11 @@ public class EnemyMovement : MonoBehaviour
     private EnemySpawner spawner;
 
     private Vector2Int[] Path;
+
+    private List<int> deadEnemies = new List<int>();
    
     private float percentage;
+    private int pathIndex;
 
     public float enemyOffset;
     public float speed = 1;
@@ -104,24 +107,40 @@ public class EnemyMovement : MonoBehaviour
 
     private void FollowPath()
     {
+        int arraySkip = 0;
+
         GameObject[] Enemies = spawner.enemies.ToArray();
-        print(Enemies.Length.ToString());
         for (int i = 0; i < Enemies.Length; i++)
         {
-            float newP = percentage - i * enemyOffset;
-            if (newP >= Path.Length)
+            int j = i + arraySkip;
+            while (deadEnemies.Contains(j))
+            {
+                arraySkip++;
+                j = i + arraySkip;
+            }
+            
+            float newP = percentage - j * enemyOffset;
+
+            if (newP >= Path.Length - 1)
+            {
                 Enemies[i].GetComponent<Enemy>().ReachedEnd();
+                deadEnemies.Add(j);
+                print(j);
+
+                continue;
+            }               
             newP = Mathf.Clamp(newP, 0, Path.Length - 1.001f);
 
             int s = Mathf.FloorToInt(newP);
             int e = s + 1;
             float p = newP - s;
-
             Vector3 pos = Vector3.Lerp(manager.GetTile(Path[s]), manager.GetTile(Path[e]), p);
+
+            pos.y = 0.15f;
             Enemies[i].transform.position = pos;
         }
-        print(percentage);
         percentage += speed / 50;
+        //print(percentage);
     }
 
     private void FixedUpdate()
