@@ -25,6 +25,17 @@ public class EnemySpawner : MonoBehaviour
         manager.waveStart.AddListener(StartWave);
     }
 
+    private void Update()
+    {
+        if (waveComplete)
+            return;
+
+        if (enemies.Count == 0)
+        {
+            LaneComplete();
+        }
+    }
+
     public void StartWave()
     {
         waveComplete = false;
@@ -35,6 +46,7 @@ public class EnemySpawner : MonoBehaviour
     private void LaneComplete()
     {
         waveComplete = true;
+        manager.TryEndWave();
     }
 
     private GameObject EnemyPrefab()
@@ -69,6 +81,5 @@ public class EnemySpawner : MonoBehaviour
             enemies.Add(enemy);           
             yield return new WaitForSeconds(enemyOffset / speed);
         }
-        LaneComplete();
     }
 }

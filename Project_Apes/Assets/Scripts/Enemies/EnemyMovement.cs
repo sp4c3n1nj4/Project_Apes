@@ -54,6 +54,7 @@ public class EnemyMovement : MonoBehaviour
         moveEnemies = true;
         enemyOffset = _enemyOffset;
         speed = _speed;
+        deadEnemies= new List<int>();
     }
 
     public void EndWave()
@@ -77,17 +78,21 @@ public class EnemyMovement : MonoBehaviour
         }
 
         Vector2Int[] _path = pathfinding.FindPath(startTile, endTile);
-        if (_path != null && _path.Length < Path.Length)
+        if (_path.Length > 0 && _path.Length < Path.Length)
         {
             Path = _path;
             hasPath = true;
+        }
+        else if (_path.Length < 0)
+        {
+
         }
     }
 
     private void DoPathfinding()
     {
         Vector2Int[] _path = pathfinding.FindPath(startTile, endTile);
-        if (_path != null)
+        if (_path.Length > 0)
         {
             Path = _path;
             hasPath = true;
@@ -102,7 +107,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void PathfindingError()
     {
-        Debug.LogError("now valid path found");
+        Debug.LogError("no valid path found");
     }
 
     private void FollowPath()

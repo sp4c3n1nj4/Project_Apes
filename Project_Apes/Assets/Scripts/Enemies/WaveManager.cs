@@ -10,10 +10,13 @@ public class WaveManager : MonoBehaviour
     TileManager manager;
     [SerializeField]
     GameObject WaveErrorMessage;
+    [SerializeField]
+    GameObject WaveStartButton;
 
     [SerializeField]
     private GameObject Lane;
     private int waveIndex = 0;
+    private bool waveOngoing = false;
 
     public UnityEvent waveStart;
     public List<GameObject> Lanes;
@@ -68,6 +71,9 @@ public class WaveManager : MonoBehaviour
 
     public void TryAdvanceWave()
     {
+        if (waveOngoing)
+            return;
+
         for (int i = 0; i < movements.Length; i++)
         {
             if (!movements[i].hasPath)
@@ -80,6 +86,20 @@ public class WaveManager : MonoBehaviour
         AdvanceWaves();
     }
 
+    public void TryEndWave()
+    {
+        if (!waveOngoing)
+            return;
+
+        for (int i = 0; i < Lanes.Count; i++)
+        {
+            if (!Lanes[i].GetComponent<EnemySpawner>().waveComplete)
+                return;
+        }
+
+        EndWave();
+    }
+
     private IEnumerator FailAdvanceWave()
     {
         WaveErrorMessage.SetActive(true);
@@ -89,10 +109,19 @@ public class WaveManager : MonoBehaviour
 
     private void AdvanceWaves()
     {
+        waveOngoing= true;
+        WaveStartButton.SetActive(false);
+
         spawners = MakeSpawnerArray();
         movements = MakeMovementArray();
 
         waveStart.Invoke();
+    }
+
+    private void EndWave()
+    {
+        waveOngoing = false;
+        WaveStartButton.SetActive(true);
     }
 
     private EnemySpawner[] MakeSpawnerArray()
