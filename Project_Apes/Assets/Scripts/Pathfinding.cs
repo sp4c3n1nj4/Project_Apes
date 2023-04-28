@@ -102,6 +102,8 @@ public class Pathfinding : MonoBehaviour
             currentNode = currentNode.parent;
         }
 
+        _Path.Add(currentNode);
+
         Vector2Int[] waypoints = SimplifyPath(_Path);
 
         Array.Reverse(waypoints);
@@ -113,6 +115,8 @@ public class Pathfinding : MonoBehaviour
     {
         List<Vector2Int> waypoints = new List<Vector2Int>();
         Vector2 directionOld = Vector2.zero;
+
+        waypoints.Add(path[0].gridPos);
 
         for (int i = 1; i < path.Count; i++)
         {

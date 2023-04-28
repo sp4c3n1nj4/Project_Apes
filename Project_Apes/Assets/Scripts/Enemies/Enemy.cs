@@ -16,19 +16,17 @@ public class Enemy : MonoBehaviour
     public EnemyType enemyType;
     public List<DamageType> typesTaken;
 
-    //public float health;
-    //public float maxHealth;
-    //public virtual void Update()
-    //{
-    //    if (health <= 0)
-    //    {
-    //        DestroyEntity();
-    //    }
-    //}
+    public virtual void ReachedEnd()
+    {
+        //damage hp
+        print("reached end");        
+        DestroyEnemy();       
+    }
 
     public virtual void DestroyEnemy()
-    {       
-        //Destroy(gameObject);
+    {
+        gameObject.GetComponentInParent<EnemySpawner>().enemies.Remove(gameObject);
+        Destroy(gameObject);
     }
 
     public void TakeDamage(DamageType damageType)

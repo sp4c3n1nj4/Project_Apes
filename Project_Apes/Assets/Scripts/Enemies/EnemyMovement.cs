@@ -105,10 +105,13 @@ public class EnemyMovement : MonoBehaviour
     private void FollowPath()
     {
         GameObject[] Enemies = spawner.enemies.ToArray();
+        print(Enemies.Length.ToString());
         for (int i = 0; i < Enemies.Length; i++)
         {
             float newP = percentage - i * enemyOffset;
-            if (newP >= Path.Length) continue;
+            if (newP >= Path.Length)
+                Enemies[i].GetComponent<Enemy>().ReachedEnd();
+            newP = Mathf.Clamp(newP, 0, Path.Length - 1.001f);
 
             int s = Mathf.FloorToInt(newP);
             int e = s + 1;
@@ -117,8 +120,8 @@ public class EnemyMovement : MonoBehaviour
             Vector3 pos = Vector3.Lerp(manager.GetTile(Path[s]), manager.GetTile(Path[e]), p);
             Enemies[i].transform.position = pos;
         }
-
-        percentage += (1 / 50) * speed;
+        print(percentage);
+        percentage += speed / 50;
     }
 
     private void FixedUpdate()

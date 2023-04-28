@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class TileManager : MonoBehaviour
 {
@@ -155,11 +156,16 @@ public class TileManager : MonoBehaviour
 
     private void TileInteract()
     {
+        //if (EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    return;
+        //}
+
         if (selectedTile == new Vector2Int(-1, -1))
             return;
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
+        {          
             print(selectedTile.ToString() + "\n" + GetTile(selectedTile).ToString());
 
             if (ActiveTowers.Count > 0)
@@ -175,7 +181,6 @@ public class TileManager : MonoBehaviour
     }
     private void EmptyTileInteract()
     {
-        print("empty tile interact");
         clickedTile = selectedTile;
         selected = Selected.tile;
         TileUI.transform.position = GetTile(clickedTile);

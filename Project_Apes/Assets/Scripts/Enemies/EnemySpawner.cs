@@ -67,7 +67,8 @@ public class EnemySpawner : MonoBehaviour
         {
             GameObject enemy = Instantiate(EnemyPrefab(), transform);
             enemies.Add(enemy);
-            yield return new WaitForSeconds((1 / 50) * speed);
+            print("spawned enemy");            
+            yield return new WaitForSeconds(enemyOffset / speed);
         }
         LaneComplete();
     }

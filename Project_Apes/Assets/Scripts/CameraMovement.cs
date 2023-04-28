@@ -8,6 +8,10 @@ public class CameraMovement : MonoBehaviour
     //make menu slider for this
     [SerializeField]
     private float speed = 1f;
+    [SerializeField]
+    private float yScroll = 0.5f;
+    [SerializeField]
+    private Vector2 minMaxScroll;
 
     public float maxX = 10f;
     public float minX = -10f;
@@ -16,11 +20,14 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        PlayerInput();
+        MoveCamera();
+        ScrollCamera();
     }
 
-    private void PlayerInput()
+    private void MoveCamera()
     {
+        
+
         Vector3 direction = Vector3.zero;
         direction.x = Input.GetAxis("Horizontal");
         direction.z = Input.GetAxis("Vertical");
@@ -32,5 +39,18 @@ public class CameraMovement : MonoBehaviour
         pos.z = Mathf.Clamp(pos.z, minY, maxY);
 
         gameObject.transform.position = pos;
+    }
+
+    private void ScrollCamera()
+    {
+        float scroll = Input.mouseScrollDelta.y;
+
+        if (scroll == 0)
+            return;
+
+        if (gameObject.transform.position.y + yScroll * scroll > minMaxScroll.y || gameObject.transform.position.y + yScroll * scroll < minMaxScroll.x)
+            return;
+
+        gameObject.transform.Translate(Vector3.back * yScroll * scroll);
     }
 }

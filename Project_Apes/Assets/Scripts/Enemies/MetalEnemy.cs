@@ -6,11 +6,11 @@ public class MetalEnemy : Enemy
 {
     public static new EnemyType enemyType = EnemyType.clay;
 
-    public List<Send> drops;
+    public List<Resource> drops;
 
     private void Start()
     {
-        drops = new List<Send>();
+        drops = new List<Resource>();
     }
 
     public override void DestroyEnemy()
@@ -20,7 +20,7 @@ public class MetalEnemy : Enemy
             switch (typesTaken[i])
             {
                 case DamageType.fire:
-                    drops.Add(new Send("shard", 3));
+                    drops.Add(new Resource("shard", 3));
                     break;
                 case DamageType.electric:
                     break;

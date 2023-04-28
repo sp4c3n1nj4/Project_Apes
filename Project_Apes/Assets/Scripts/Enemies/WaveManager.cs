@@ -8,6 +8,8 @@ public class WaveManager : MonoBehaviour
 {
     [SerializeField]
     TileManager manager;
+    [SerializeField]
+    GameObject WaveErrorMessage;
 
     [SerializeField]
     private GameObject Lane;
@@ -30,6 +32,8 @@ public class WaveManager : MonoBehaviour
     {
         spawners = MakeSpawnerArray();
         movements = MakeMovementArray();
+
+        CreateLane(new Vector2Int(0,13), EnemyType.wood, 10);
     }
 
     private void Update()
@@ -50,7 +54,7 @@ public class WaveManager : MonoBehaviour
         WaveComplete();
     }
 
-    private void CreateLane(Vector2Int pos, EnemyType _enemyType, int _enemyAmount, float _enemyOffset = 0.3f)
+    private void CreateLane(Vector2Int pos, EnemyType _enemyType, int _enemyAmount, float _enemyOffset = 0.35f)
     {
         GameObject lane = Instantiate(Lane, manager.GetTile(pos), Quaternion.identity, transform);
         Lanes.Add(lane);
@@ -68,7 +72,7 @@ public class WaveManager : MonoBehaviour
         {
             if (!movements[i].hasPath)
             {
-                FailAdvanceWave();
+                StartCoroutine(FailAdvanceWave());
                 return;
             }               
         }
@@ -76,9 +80,11 @@ public class WaveManager : MonoBehaviour
         AdvanceWaves();
     }
 
-    private void FailAdvanceWave()
+    private IEnumerator FailAdvanceWave()
     {
-        Debug.LogError("not all lanes have path");
+        WaveErrorMessage.SetActive(true);
+        yield return new WaitForSeconds(3);
+        WaveErrorMessage.SetActive(false);
     }
 
     private void AdvanceWaves()

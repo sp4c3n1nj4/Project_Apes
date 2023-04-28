@@ -52,7 +52,7 @@ MonoBehaviour:
   speed: 1
   hasPath: 0
   startTile: {x: 0, y: 0}
-  endTile: {x: 0, y: 0}
+  endTile: {x: 9, y: 10}
   moveEnemies: 0
 --- !u!114 &3359852772601763328
 MonoBehaviour:
