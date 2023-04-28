@@ -6,11 +6,14 @@ using UnityEngine;
 
 public class FireTower : Tower
 {
-    private int tilerange = 3;
+    private int tilerange = 3 ;
 
-    private new DamageType damageType = DamageType.fire;
-    private new float range = 2f;
-    private new float attackDelay = 0.1f;
+    private void Start()
+    {
+        damageType = DamageType.fire;
+        range = 2f;
+        attackDelay = 0.5f;
+    }
 
     public override void Attack()
     {
