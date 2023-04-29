@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -8,6 +9,9 @@ public class EnemySpawner : MonoBehaviour
     private WaveManager manager;
     [SerializeField]
     private GameObject[] enemyPrefabs;
+    [SerializeField]
+    private GameObject[] enemyIcons;
+    private TextMeshProUGUI text;
 
     //stats
     public EnemyType enemyType;
@@ -23,6 +27,8 @@ public class EnemySpawner : MonoBehaviour
     {
         manager = GameObject.FindObjectOfType<WaveManager>();
         manager.waveStart.AddListener(StartWave);
+        enemyIcons[EnemyPrefabIndex()].SetActive(true);
+        text.text = enemyAmount.ToString();
     }
 
     private void Update()
@@ -49,7 +55,7 @@ public class EnemySpawner : MonoBehaviour
         manager.TryEndWave();
     }
 
-    private GameObject EnemyPrefab()
+    private int EnemyPrefabIndex()
     {
         int i = 0;
         switch (enemyType)
@@ -69,7 +75,7 @@ public class EnemySpawner : MonoBehaviour
             default:
                 break;
         }
-        return enemyPrefabs[i];
+        return i;
     }
 
     IEnumerator SpawnEnemies()
@@ -77,7 +83,7 @@ public class EnemySpawner : MonoBehaviour
         enemies = new List<GameObject>();
         for (int i = 1; i < enemyAmount; i++)
         {
-            GameObject enemy = Instantiate(EnemyPrefab(), transform);
+            GameObject enemy = Instantiate(enemyPrefabs[EnemyPrefabIndex()], transform);
             enemies.Add(enemy);           
             yield return new WaitForSeconds(enemyOffset / speed);
         }

@@ -13,6 +13,8 @@ public class TileManager : MonoBehaviour
     private GameObject TileHighlight, TowerUI, TileUI;
     private const float tileSize = 1f;
     private const float tileOffset = 0.5f;
+    [SerializeField]
+    private float interactMenuOffset;
 
     public Vector2Int gridSize = new Vector2Int(20, 20);
     public Node[,] grid;
@@ -190,7 +192,7 @@ public class TileManager : MonoBehaviour
     {
         clickedTile = selectedTile;
         selected = Selected.tower;
-        TowerUI.transform.position = GetTile(clickedTile);
+        TowerUI.transform.position = GetTile(clickedTile) + Vector3.up * interactMenuOffset;
         TowerUI.SetActive(true);
     }
 
