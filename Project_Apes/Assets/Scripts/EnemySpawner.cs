@@ -11,7 +11,8 @@ public class EnemySpawner : MonoBehaviour
     private GameObject[] enemyPrefabs;
     [SerializeField]
     private GameObject[] enemyIcons;
-    private TextMeshProUGUI text;
+    [SerializeField]
+    private TextMeshPro text;
 
     //stats
     public EnemyType enemyType;
@@ -21,7 +22,7 @@ public class EnemySpawner : MonoBehaviour
 
     //vars
     public List<GameObject> enemies;
-    public bool waveComplete = false; 
+    public bool waveComplete = false;
 
     private void Start()
     {
@@ -81,7 +82,7 @@ public class EnemySpawner : MonoBehaviour
     IEnumerator SpawnEnemies()
     {
         enemies = new List<GameObject>();
-        for (int i = 1; i < enemyAmount; i++)
+        for (int i = 1; i < enemyAmount + 1; i++)
         {
             GameObject enemy = Instantiate(enemyPrefabs[EnemyPrefabIndex()], transform);
             enemies.Add(enemy);           

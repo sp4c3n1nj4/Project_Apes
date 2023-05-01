@@ -20,17 +20,18 @@ public class WoodEnemy : Enemy
             switch (typesTaken[i])
             {
                 case DamageType.fire:
-                    drops.Add(new Resource("shard", 3));
-                    break;
-                case DamageType.electric:
+                    drops.Add(new Resource(ResourceType.shard, 3));
                     break;
                 case DamageType.ice:
+                    break;
+                case DamageType.electric:
                     break;
                 case DamageType.steam:
                     break;
                 case DamageType.water:
                     break;
-                case DamageType.magnet:
+                default:
+                    drops.Add(new Resource(ResourceType.gold, 1));
                     break;
             }
         }

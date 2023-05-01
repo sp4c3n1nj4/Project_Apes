@@ -20,6 +20,7 @@ public class WaveManager : MonoBehaviour
 
     public UnityEvent waveStart;
     public List<GameObject> Lanes;
+    public List<Vector2Int> LaneStarts;
 
     private EnemySpawner[] spawners;
     private EnemyMovement[] movements;
@@ -27,6 +28,7 @@ public class WaveManager : MonoBehaviour
     private void Awake()
     {
         Lanes = new List<GameObject>();
+        LaneStarts = new List<Vector2Int>();
         if (waveStart == null)
             waveStart = new UnityEvent();
     }
@@ -36,25 +38,7 @@ public class WaveManager : MonoBehaviour
         spawners = MakeSpawnerArray();
         movements = MakeMovementArray();
 
-        CreateLane(new Vector2Int(6,10), EnemyType.wood, 10);
-    }
-
-    private void Update()
-    {
-        CheckWaveComplete();
-    }
-
-    private void CheckWaveComplete()
-    {
-        if (Lanes.Count! > 0)
-            return;
-
-        for (int i = 0; i < spawners.Length; i++)
-        {
-            if (!spawners[i].waveComplete)
-                return;
-        }
-        WaveComplete();
+        NewLane();
     }
 
     private void CreateLane(Vector2Int pos, EnemyType _enemyType, int _enemyAmount, float _enemyOffset = 0.35f)
@@ -67,6 +51,60 @@ public class WaveManager : MonoBehaviour
         spawner.enemyType = _enemyType;
         spawner.enemyAmount = _enemyAmount;
         spawner.enemyOffset = _enemyOffset;
+    }
+
+    private void NewLane()
+    {
+        if (waveIndex % 2 != 0)
+            return;
+
+        int _enemyAmount = Mathf.FloorToInt(waveIndex / 2) * 5 + 10;
+
+        EnemyType _enemyType = EnemyType.wood;
+        int randomType = UnityEngine.Random.Range(1, 5);
+        switch (randomType)
+        {
+            case 1:
+                break;
+            case 2:
+                _enemyType = EnemyType.metal;
+                break;
+            case 3:
+                _enemyType = EnemyType.clay;
+                break;
+            case 4:
+                _enemyType = EnemyType.plastic;
+                break;
+            default:
+                break;
+        }
+
+        Vector2Int pos = Vector2Int.zero;
+        int otherAxis = UnityEngine.Random.Range(0, manager.gridSize.x);
+        int randomAxis = UnityEngine.Random.Range(1, 5);
+        switch (randomAxis)
+        {
+            case 1:
+                pos.x = 0;
+                pos.y = otherAxis;
+                break;
+            case 2:
+                pos.x = manager.gridSize.x - 1;
+                pos.y = otherAxis;
+                break;
+            case 3:
+                pos.y = 0;
+                pos.x = otherAxis;
+                break;
+            case 4:
+                pos.y = manager.gridSize.x - 1;
+                pos.x = otherAxis;
+                break;
+            default:
+                break;
+        }
+
+        CreateLane(pos, _enemyType, _enemyAmount);
     }
 
     public void TryAdvanceWave()
@@ -122,6 +160,8 @@ public class WaveManager : MonoBehaviour
     {
         waveOngoing = false;
         WaveStartButton.SetActive(true);
+        waveIndex++;
+        NewLane();
     }
 
     private EnemySpawner[] MakeSpawnerArray()
@@ -142,10 +182,5 @@ public class WaveManager : MonoBehaviour
             l.Add(Lanes[i].GetComponent<EnemyMovement>());
         }
         return l.ToArray();
-    }
-
-    private void WaveComplete()
-    {
-        waveIndex++;
     }
 }

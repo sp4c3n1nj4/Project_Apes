@@ -8,9 +8,11 @@ using UnityEngine.EventSystems;
 public class TileManager : MonoBehaviour
 {
     [SerializeField]
+    ResourceManager resourceManager;
+    [SerializeField]
     GameObject[] Towers;
     [SerializeField]
-    private GameObject TileHighlight, TowerUI, TileUI;
+    private GameObject TileHighlight, TowerUI, TileUI, PayErrorMessage;
     private const float tileSize = 1f;
     private const float tileOffset = 0.5f;
     [SerializeField]
@@ -222,11 +224,14 @@ public class TileManager : MonoBehaviour
     }
     public void DestroyTower()
     {
-        ActiveTowers[clickedTile].GetComponent<Tower>().DestroyTower();
-        ActiveTowers.Remove(clickedTile);
-        grid[clickedTile.x, clickedTile.y].walkable = true;
+        Tower tower = ActiveTowers[clickedTile].GetComponent<Tower>();
+        resourceManager.AddResources(tower.cost);
+        tower.DestroyTower();
 
         GridObstacleChange.Invoke();
+
+        ActiveTowers.Remove(clickedTile);
+        grid[clickedTile.x, clickedTile.y].walkable = true;       
         DisableMenu();
     }
 
@@ -237,6 +242,12 @@ public class TileManager : MonoBehaviour
     }
     public void SpawnTower(int i)
     {
+        if (!resourceManager.TryPayCost(Towers[i].GetComponent<Tower>().cost))
+        {
+            StartCoroutine(PayError());
+            return;
+        }           
+
         GameObject tower = Instantiate<GameObject>(Towers[i]);
         tower.transform.position = GetTile(clickedTile) + Vector3.up * tower.GetComponent<Tower>().spawnOffset;
 
@@ -248,4 +259,12 @@ public class TileManager : MonoBehaviour
         selected = Selected.none;
         DisableMenu();
     }   
+
+    private IEnumerator PayError()
+    {
+        PayErrorMessage.transform.position = GetTile(clickedTile) + Vector3.back * 0.5f;
+        PayErrorMessage.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        PayErrorMessage.SetActive(false);
+    }
 }

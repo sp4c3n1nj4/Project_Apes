@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7866406540341485635}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
-  m_LocalScale: {x: 0.70000005, y: 0.70000005, z: 3}
+  m_LocalPosition: {x: 1.5, y: 0, z: 0}
+  m_LocalScale: {x: 1.7, y: 0.70000005, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7866406540510718841}
@@ -182,9 +182,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDelay: 0
-  damageType: 0
+  damageType: 5
   range: Infinity
   spawnOffset: 0.45
+  cost:
+  - amount: 1
+    drop: 0
   engaged: 0
 --- !u!1 &7866406541645782114
 GameObject:

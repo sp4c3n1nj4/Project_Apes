@@ -166,6 +166,7 @@ MonoBehaviour:
   - {fileID: 508060892564039232}
   - {fileID: 6554410671718842704}
   - {fileID: 6532670152760927639}
+  text: {fileID: 1074308599630148027}
   enemyType: 0
   enemyOffset: 0.3
   enemyAmount: 0

@@ -182,9 +182,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDelay: 0
-  damageType: 0
+  damageType: 2
   range: Infinity
   spawnOffset: 0.45
+  cost:
+  - amount: 1
+    drop: 0
   engaged: 0
 --- !u!1 &3449391109843011189
 GameObject:

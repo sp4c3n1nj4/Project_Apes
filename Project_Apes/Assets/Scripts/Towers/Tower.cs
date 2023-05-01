@@ -6,15 +6,15 @@ using UnityEngine;
 
 public enum DamageType
 {
-    cut,
-    press,
-    shredd,
+    saw,
+    crush,
+    drill,
+    laser,
     fire,
-    electric,
     ice,
+    electric,
     steam,
     water,
-    magnet
 }
 
 public class Tower : MonoBehaviour
@@ -26,13 +26,14 @@ public class Tower : MonoBehaviour
     public DamageType damageType;
     public float range = Mathf.Infinity;
     public float spawnOffset = 0.45f;
+    public Resource[] cost;
     //variables
     public bool engaged;
     private float delay;
 
     public void DestroyTower()
     {
-        //more stuff here later
+        
         Destroy(gameObject);
     }
 

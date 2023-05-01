@@ -269,4 +269,7 @@ MonoBehaviour:
   damageType: 0
   range: Infinity
   spawnOffset: 0.45
+  cost:
+  - amount: 1
+    drop: 0
   engaged: 0

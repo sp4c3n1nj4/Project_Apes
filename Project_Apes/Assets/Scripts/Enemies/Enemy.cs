@@ -13,14 +13,21 @@ public enum EnemyType
 
 public class Enemy : MonoBehaviour
 {
+    private PlayerHealth hp;
+
     public EnemyType enemyType;
     public List<DamageType> typesTaken;
 
-    public virtual void ReachedEnd()
+    private void Awake()
     {
-        //damage hp
-        print("reached end");        
-        DestroyEnemy();       
+        hp = GameObject.FindObjectOfType<PlayerHealth>();
+    }
+
+    public virtual void ReachedEnd()
+    {       
+        print("reached end");
+        DestroyEnemy();
+        hp.TakeDamage(1);
     }
 
     public virtual void DestroyEnemy()
@@ -42,13 +49,16 @@ public class Enemy : MonoBehaviour
         {
             switch (typesTaken[i])
             {
-                case DamageType.cut:
+                case DamageType.saw:
                     DestroyEnemy();
                     break;
-                case DamageType.press:
+                case DamageType.crush:
                     DestroyEnemy();
                     break;
-                case DamageType.shredd:
+                case DamageType.drill:
+                    DestroyEnemy();
+                    break;
+                case DamageType.laser:
                     DestroyEnemy();
                     break;
                 default:

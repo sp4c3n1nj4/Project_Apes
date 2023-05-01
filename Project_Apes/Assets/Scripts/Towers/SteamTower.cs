@@ -20,10 +20,12 @@ public class SteamTower : Tower
         RaycastHit[] hits;
         RaycastHit[] hits1;
         RaycastHit[] hits2;
-        hits1 = Physics.RaycastAll(TileOffsetPosition(1, -1.5f), TileOffsetPosition(1, 1.5f), tilerange + 1, LayerMask.GetMask("Enemy"));
-        hits2 = Physics.RaycastAll(TileOffsetPosition(-1, -1.5f), TileOffsetPosition(-1, 1.5f), tilerange + 1, LayerMask.GetMask("Enemy"));
-
+        RaycastHit[] hits3;
+        hits1 = Physics.RaycastAll(TileOffsetPosition(0, 0), TileOffsetPosition(0, 3), tilerange + 1, LayerMask.GetMask("Enemy"));
+        hits2 = Physics.RaycastAll(TileOffsetPosition(1, 1.5f), TileOffsetPosition(1, 3), tilerange + 1, LayerMask.GetMask("Enemy"));
+        hits3 = Physics.RaycastAll(TileOffsetPosition(-1, 1.5f), TileOffsetPosition(-1, 3), tilerange + 1, LayerMask.GetMask("Enemy"));
         hits = hits1.Concat(hits2).ToArray();
+        hits = hits.Concat(hits3).ToArray();
         for (int i = 0; i < hits.Length; i++)
         {
             hits[i].transform.gameObject.GetComponent<Enemy>().TakeDamage(damageType);
@@ -33,8 +35,9 @@ public class SteamTower : Tower
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(TileOffsetPosition(1, -1.5f), TileOffsetPosition(1, 1.5f));
-        Gizmos.DrawLine( TileOffsetPosition(-1, -1.5f),TileOffsetPosition(-1, 1.5f));
+        Gizmos.DrawLine(TileOffsetPosition(0, 0), TileOffsetPosition(0, 3));
+        Gizmos.DrawLine(TileOffsetPosition(1, 1.5f), TileOffsetPosition(1, 3));
+        Gizmos.DrawLine(TileOffsetPosition(-1, 1.5f), TileOffsetPosition(-1, 3));
     }
 
 }
